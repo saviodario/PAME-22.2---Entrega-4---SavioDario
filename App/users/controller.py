@@ -39,7 +39,7 @@ class UserController(MethodView):
         return {"msg":"Não existe tal usuário"},404
     
 class UserDetails(MethodView):
-    def get(self,id):
+    def get(self,idu,id):
         schema = UserSchema()
         for user in users:
             if user['id'] == id:
@@ -90,9 +90,10 @@ class UserDetails(MethodView):
             if user['id'] == idu and user['tipo'] == 'gerente':
                 for user in users:
                     if user['id'] == id:
+                        nome = user['username']
                         users.remove(user)
-                        return {},204
-                return{},404
+                        return {'msg':f'O usuário {nome} foi removido do sistema'},204
+                return{'msg':f'O usuário de id {id} não consta no sistema'},404
         return {'msg':'Precisa ser gerente para fazer tal requisição'},404
             
 class ProductController(MethodView):
@@ -121,7 +122,7 @@ class ProductController(MethodView):
         return {"msg":"Não existe tal usuário"},404
     
 class ProductDetails(MethodView):
-    def get(self,idp):
+    def get(self,idu,idp):
         schema = ProductSchema()
         for product in products:
             if product['id'] == idp:
@@ -176,6 +177,29 @@ class ProductDetails(MethodView):
                 for product in products:
                     if product['id'] == idp:
                         products.remove(product)
-                        return {},204
-                return{},404
+                        return {'msg':f'O produto de id {idp} foi removido do sistema'},204
+                return{'msg':f'O produto de id {idp} não consta no sistema'},404
         return {'msg':'Precisa ser gerente para fazer tal requisição'},404
+
+class UserBuyng(MethodView):
+    def patch(self,idu,idp):
+        for user in users:
+            if user['id'] == idu and user['tipo'] == 'cliente':
+                userIndex = users.index(user)
+                user = users[userIndex]
+                nome = user['username'] 
+                productIndex = -1
+                for product in products:
+                    if product["id"] == idp:
+                        productIndex = products.index(product)
+                if productIndex == -1:
+                    return {'msg':'esse produto não existe'}, 404
+                product = products[productIndex]
+                if product['quantidade'] <= 0: #verifica se o produto que esta sendo comprado já esta esgotado
+                    return {'msg':'produto esgotado'} 
+                product['quantidade'] = product['quantidade'] - 1 #subtrai a quantia de produtos em estoque
+                tipo = product['tipo']
+                preço = product['preço']
+                
+                return {'msg':f'{tipo} comprada por R${preço},00 pelo cliente {nome}!'}, 201
+        return {'msg':'Precisa ser cliente para fazer uma compra'},404

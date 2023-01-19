@@ -1,7 +1,7 @@
 my_users = [
     {
         "id":1,
-        "username":"savio",
+        "username":"juliano",
         "tipo":"gerente"
     },
     {
@@ -12,12 +12,12 @@ my_users = [
     {
         "id":3,
         "username":"simone",
-        "tipo":"consultor"
+        "tipo":"cliente"
     },
     {
         "id":4,
         "username":"fernando",
-        "tipo":"consultor"
+        "tipo":"cliente"
     }
 ]
 

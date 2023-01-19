@@ -1,4 +1,4 @@
-from App.extensions import ma
+from app.extensions import ma
 
 class UserSchema (ma.Schema):
     id = ma.Integer(dump_only=True)
